@@ -54,8 +54,11 @@ app.post("/games", async (req, res) => {
   }
 
   let data = {
-    nome: game.nome,
-    duracao: game.duracao,
+    title: game.title,
+    imgURL: game.imgURL,
+    genre: game.genre,
+    console: game.console,
+    yearPublished: game.yearPublished,
   };
 
   const newGame = await gameSchema.create(data);
