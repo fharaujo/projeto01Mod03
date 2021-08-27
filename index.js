@@ -34,7 +34,7 @@ app.get("/games/:_id", async (req, res) => {
     return;
   }
 
-  res.send({game});
+  res.send({ game });
 });
 
 app.post("/games", async (req, res) => {
@@ -92,8 +92,11 @@ app.put("/games/:_id", async (req, res) => {
   }
 
   let data = {
-    nome: game.nome,
-    duracao: game.duracao,
+    title: game.title,
+    imgURL: game.imgURL,
+    genre: game.genre,
+    console: game.console,
+    yearPublished: game.yearPublished,
   };
 
   const newGame = await gameSchema.findByIdAndUpdate({ _id }, data, {
@@ -105,7 +108,7 @@ app.put("/games/:_id", async (req, res) => {
 app.delete("/games/:_id", async (req, res) => {
   const { _id } = req.params;
   // buscar o objeto id do banco e vendo se é válido com o da requisição
-  const isValid = await moongose.Types.ObjectId.isValid(_id); 
+  const isValid = await moongose.Types.ObjectId.isValid(_id);
 
   if (!isValid) {
     // testando o id
