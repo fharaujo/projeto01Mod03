@@ -1,5 +1,5 @@
 const express = require("express");
-const gameSchema = require("./models/filme");
+const gameSchema = require("./models/game");
 const moongose = require("mongoose");
 
 const app = express();
