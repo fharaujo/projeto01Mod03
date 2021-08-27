@@ -23,7 +23,13 @@ app.get("/games", async (req, res) => {
 app.get("/games/:_id", async (req, res) => {
   const { _id } = req.params;
   const game = await gameSchema.findById({ _id });
-  console.log(game);
+  const isValid = await moongose.Types.ObjectId.isValid(_id); // buscar o id válido
+
+  if (!isValid) {
+    // testando o id
+    res.status(400).send({ error: "Filme não existe" });
+    return;
+  }
 
   if (
     !game ||
