@@ -4,7 +4,8 @@
   "description": "Project 01 CRUD API NodeJS - Blue Editech Course - Module 03",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index",
+    "dev": "nomdemon index"
   },
   "repository": {
     "type": "git",
