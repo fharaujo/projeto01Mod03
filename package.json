@@ -16,5 +16,12 @@
   "bugs": {
     "url": "https://github.com/fharaujo/projeto01Mod03/issues"
   },
-  "homepage": "https://github.com/fharaujo/projeto01Mod03#readme"
+  "homepage": "https://github.com/fharaujo/projeto01Mod03#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^6.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.12"
+  }
 }
