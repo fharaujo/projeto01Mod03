@@ -1,17 +1,20 @@
+// Import modules
 const express = require("express");
 const gameSchema = require("./models/game");
 const moongose = require("mongoose");
 
 const app = express();
 const port = 3000;
-app.use(express.json({ extended: false }));
+app.use(express.json());
 
+// GET "/" respondendo as boas vindas do projeto
 app.get("/", (req, res) => {
   res.send(
     "Hello, Project 01 CRUD API NodeJS - Blue Editech Course - Module 03"
   );
 });
 
+// GET "/games" responendo status com todos jogos criados
 app.get("/games", async (req, res) => {
   const games = await gameSchema.find();
   res.status(200).send(games);
