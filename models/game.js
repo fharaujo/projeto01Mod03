@@ -1,16 +1,24 @@
 const moongose = require("../database/index");
 
-const filmeSchema = new moongose.Schema({
-  nome: {
+const gameSchema = new moongose.Schema({
+  title: {
     type: String,
     require: true,
   },
-  duracao: {
+  imgURL: {
     type: Number,
-    require: true,
+  },
+  genre: {
+    type: String,
+  },
+  console: {
+    type: String,
+  },
+  yearPublished: {
+    type: Number,
   },
 });
-filmeSchema.set("versionKey", false); // tirando __v
-const Filme = moongose.model("Filme", filmeSchema);
+gameSchema.set("versionKey", false); // tirando __v
+const Game = moongose.model("Game", gameSchema);
 
-module.exports = Filme;
+module.exports = Game;
