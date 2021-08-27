@@ -7,7 +7,7 @@ mongoose.connect("mongodb://localhost:27017/db_project", {
   if(error){
       console.log(error)
   }else{
-      console.log("MongoDB conectado com sucesso.")
+      console.log("... MongoDB conectado com sucesso.")
   }
 });
 
