@@ -27,7 +27,7 @@ app.get("/games/:_id", async (req, res) => {
 
   if (!isValid) {
     // testando o id
-    res.status(400).send({ error: "Filme não existe" });
+    res.status(422).send({ error: "ID inválido." });
     return;
   }
 
