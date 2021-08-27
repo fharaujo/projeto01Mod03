@@ -30,10 +30,11 @@ app.get("/games/:_id", async (req, res) => {
     !game.console ||
     !game.yearPublished
   ) {
-    res.status().send({ mensage: "Game não existe." });
+    res.status(400).send({ mensage: "Game não existe." });
+    return;
   }
 
-  res.send(game);
+  res.send({game});
 });
 
 app.post("/games", async (req, res) => {
