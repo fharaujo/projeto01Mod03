@@ -1,5 +1,5 @@
 const express = require("express");
-const filmeSchema = require("./models/filme");
+const gameSchema = require("./models/filme");
 const moongose = require("mongoose");
 
 const app = express();
@@ -10,45 +10,59 @@ app.get("/", (req, res) => {
   res.send("Hello, MongoDB");
 });
 
-app.get("/filmes", async (req, res) => {
-  const filmes = await filmeSchema.find();
-  res.send(filmes);
+app.get("/games", async (req, res) => {
+  const games = await gameSchema.find();
+  res.status(200).send(games);
 });
 
-app.get("/filmes/:_id", async (req, res) => {
+app.get("/games/:_id", async (req, res) => {
   const { _id } = req.params;
-  const filme = await filmeSchema.findById({ _id });
-  console.log(filme);
+  const game = await gameSchema.findById({ _id });
+  console.log(game);
 
-  if (!filme || !filme.nome || !filme.duracao) {
+  if (
+    !game ||
+    !game.title ||
+    !game.imgURL ||
+    !game.genre ||
+    !game.console ||
+    !game.yearPublished
+  ) {
     res.status().send({ mensage: "Filme não existe." });
   }
 
-  res.send(filme);
+  res.send(game);
 });
 
-app.post("/filmes", async (req, res) => {
-  const filme = req.body;
+app.post("/games", async (req, res) => {
+  const game = req.body;
 
-  if (!filme || !filme.nome || !filme.duracao) {
+  if (
+    !game ||
+    !game.title ||
+    !game.imgURL ||
+    !game.genre ||
+    !game.console ||
+    !game.yearPublished
+  ) {
     res.status(400).send({ error: "Filme inválido" });
 
     return;
   }
 
   let data = {
-    nome: filme.nome,
-    duracao: filme.duracao,
+    nome: game.nome,
+    duracao: game.duracao,
   };
 
-  const newFilme = await filmeSchema.create(data);
+  const newGame = await gameSchema.create(data);
 
-  res.send(newFilme);
+  res.send(newGame);
 });
 
-app.put("/filmes/:_id", async (req, res) => {
+app.put("/games/:_id", async (req, res) => {
   const { _id } = req.params; // esse é que vem do requerimento
-  const filme = req.body; // esse vem do body requerimento
+  const game = req.body; // esse vem do body requerimento
   const isValid = await moongose.Types.ObjectId.isValid(_id); // buscar o filme
 
   if (!isValid) {
@@ -57,25 +71,32 @@ app.put("/filmes/:_id", async (req, res) => {
     return;
   }
 
-  if (!filme || !filme.nome || !filme.duracao) {
-    // teste filme do body
+  if (
+    !game ||
+    !game.title ||
+    !game.imgURL ||
+    !game.genre ||
+    !game.console ||
+    !game.yearPublished
+  ) {
+    // teste game do body
     res.status(400).send({ error: "Filme inválido" });
 
     return;
   }
 
   let data = {
-    nome: filme.nome,
-    duracao: filme.duracao,
+    nome: game.nome,
+    duracao: game.duracao,
   };
 
-  const newFilme = await filmeSchema.findByIdAndUpdate({ _id }, data, {
+  const newGame = await gameSchema.findByIdAndUpdate({ _id }, data, {
     new: true,
   }); // update
-  res.send(newFilme);
+  res.send(newGame);
 });
 
-app.delete("/filmes/:_id", async (req, res) => {
+app.delete("/games/:_id", async (req, res) => {
   const { _id } = req.params;
   const isValid = await moongose.Types.ObjectId.isValid(_id); // buscar o filme
 
@@ -85,8 +106,8 @@ app.delete("/filmes/:_id", async (req, res) => {
     return;
   }
 
-  const filme = await filmeSchema.findByIdAndDelete({ _id });
-  res.send(filme);
+  const game = await gameSchema.findByIdAndDelete({ _id });
+  res.send(game);
 });
 
 app.listen(port, () => {
