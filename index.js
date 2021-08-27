@@ -14,12 +14,13 @@ app.get("/", (req, res) => {
   );
 });
 
-// GET "/games" responendo status com todos jogos criados
+// GET "/games" respondendo status com todos jogos criados
 app.get("/games", async (req, res) => {
   const games = await gameSchema.find();
   res.status(200).send(games);
 });
 
+// GET "/games/:{ID}" respondendo status com jogo pelo ID
 app.get("/games/:_id", async (req, res) => {
   const { _id } = req.params;
   const game = await gameSchema.findById({ _id });
@@ -43,9 +44,10 @@ app.get("/games/:_id", async (req, res) => {
     return;
   }
 
-  res.send({ game });
+  res.send({game});
 });
 
+// POST "/games" respondendo status com todos jogo criado
 app.post("/games", async (req, res) => {
   const game = req.body;
 
@@ -62,23 +64,15 @@ app.post("/games", async (req, res) => {
     return;
   }
 
-  let data = {
-    title: game.title,
-    imgURL: game.imgURL,
-    genre: game.genre,
-    console: game.console,
-    yearPublished: game.yearPublished,
-  };
+  const newGame = await new gameSchema(game).save();
 
-  const newGame = await gameSchema.create(data);
-
-  res.send(newGame);
+  res.status(201).send({newGame});
 });
 
 app.put("/games/:_id", async (req, res) => {
-  const { _id } = req.params; // esse é que vem do requerimento
+  const id = req.params.id; // esse é que vem do requerimento
   const game = req.body; // esse vem do body requerimento
-  const isValid = await moongose.Types.ObjectId.isValid(_id); // buscar o game
+  const isValid = await moongose.Types.ObjectId.isValid(id); // buscar o game
 
   if (!isValid) {
     // testando o id
@@ -100,18 +94,9 @@ app.put("/games/:_id", async (req, res) => {
     return;
   }
 
-  let data = {
-    title: game.title,
-    imgURL: game.imgURL,
-    genre: game.genre,
-    console: game.console,
-    yearPublished: game.yearPublished,
-  };
-
-  const newGame = await gameSchema.findByIdAndUpdate({ _id }, data, {
-    new: true,
-  }); // update
-  res.send(newGame);
+  await gameSchema.findByIdAndUpdate({ _id: id }, data, { new: true }); // update
+  const gameUpdate = await gameSchema.findById(id);
+  res.send(gameUpdate);
 });
 
 app.delete("/games/:_id", async (req, res) => {
@@ -126,7 +111,7 @@ app.delete("/games/:_id", async (req, res) => {
   }
 
   const game = await gameSchema.findByIdAndDelete({ _id });
-  res.send(game);
+  res.send({game});
 });
 
 app.listen(port, () => {
