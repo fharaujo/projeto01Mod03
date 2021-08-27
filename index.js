@@ -7,7 +7,9 @@ const port = 3000;
 app.use(express.json({ extended: false }));
 
 app.get("/", (req, res) => {
-  res.send("Hello, MongoDB");
+  res.send(
+    "Hello, Project 01 CRUD API NodeJS - Blue Editech Course - Module 03"
+  );
 });
 
 app.get("/games", async (req, res) => {
@@ -28,7 +30,7 @@ app.get("/games/:_id", async (req, res) => {
     !game.console ||
     !game.yearPublished
   ) {
-    res.status().send({ mensage: "Filme não existe." });
+    res.status().send({ mensage: "Game não existe." });
   }
 
   res.send(game);
@@ -45,7 +47,7 @@ app.post("/games", async (req, res) => {
     !game.console ||
     !game.yearPublished
   ) {
-    res.status(400).send({ error: "Filme inválido" });
+    res.status(400).send({ error: "Game inválido" });
 
     return;
   }
@@ -63,11 +65,11 @@ app.post("/games", async (req, res) => {
 app.put("/games/:_id", async (req, res) => {
   const { _id } = req.params; // esse é que vem do requerimento
   const game = req.body; // esse vem do body requerimento
-  const isValid = await moongose.Types.ObjectId.isValid(_id); // buscar o filme
+  const isValid = await moongose.Types.ObjectId.isValid(_id); // buscar o game
 
   if (!isValid) {
     // testando o id
-    res.status(400).send({ error: "Filme não existe" });
+    res.status(400).send({ error: "Game não existe" });
     return;
   }
 
@@ -80,7 +82,7 @@ app.put("/games/:_id", async (req, res) => {
     !game.yearPublished
   ) {
     // teste game do body
-    res.status(400).send({ error: "Filme inválido" });
+    res.status(400).send({ error: "Game inválido" });
 
     return;
   }
@@ -98,11 +100,12 @@ app.put("/games/:_id", async (req, res) => {
 
 app.delete("/games/:_id", async (req, res) => {
   const { _id } = req.params;
-  const isValid = await moongose.Types.ObjectId.isValid(_id); // buscar o filme
+  // buscar o objeto id do banco e vendo se é válido com o da requisição
+  const isValid = await moongose.Types.ObjectId.isValid(_id); 
 
   if (!isValid) {
     // testando o id
-    res.status(400).send({ error: "Filme não existe" });
+    res.status(400).send({ error: "Game não existe" });
     return;
   }
 
