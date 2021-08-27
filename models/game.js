@@ -6,19 +6,24 @@ const gameSchema = new moongose.Schema({
     require: true,
   },
   imgURL: {
-    type: Number,
+    type: String,
+    require: true,
   },
   genre: {
     type: String,
+    require: true,
   },
   console: {
     type: String,
+    require: true,
   },
   yearPublished: {
     type: Number,
+    require: true,
   },
 });
 gameSchema.set("versionKey", false); // tirando __v
+
 const Game = moongose.model("Game", gameSchema);
 
 module.exports = Game;
