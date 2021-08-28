@@ -7,7 +7,7 @@ const app = express();
 const port = 3000;
 app.use(express.json());
 
-// criando funções para mapeamento do código e boas práticas
+// criando funções para mapeamento de validações
 const isValidId = (id) => {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     res.status(422).send({ error: "Id inválido." });
@@ -39,7 +39,7 @@ app.get("/games", async (req, res) => {
 app.get("/games/:id", async (req, res) => {
   const id = req.params.id;
   const game = await gameSchema.findById(id);
-  // chamada das funções de mapeamento do código
+  // chamada das funções de mapeamento do código para validação
   isValidId(id);
   gameExist(game);
 
@@ -71,7 +71,7 @@ app.post("/games", async (req, res) => {
 // PUT "/games" respondendo status com o jogo atualizado
 app.put("/games/:id", async (req, res) => {
   const id = req.params.id; // recebendo ID da requisição
-  isValidId(id);
+  isValidId(id); // chamada da função de validação
 
   const game = req.body; // recebendo o game da requisição
   if (
@@ -99,7 +99,7 @@ app.delete("/games/:id", async (req, res) => {
   isValidId(id);
 
   const game = await gameSchema.findById(id);
-  gameExist(game);
+  gameExist(game); // chamada da função de validação
 
   await gameSchema.findByIdAndDelete(id);
   res.send({ message: "Game Excluido com sucesso." });
