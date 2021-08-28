@@ -69,17 +69,18 @@ app.post("/games", async (req, res) => {
   res.status(201).send({newGame});
 });
 
-app.put("/games/:_id", async (req, res) => {
+// PUT "/games" respondendo status com o jogo atualizado
+app.put("/games/:id", async (req, res) => {
   const id = req.params.id; // esse é que vem do requerimento
-  const game = req.body; // esse vem do body requerimento
   const isValid = await moongose.Types.ObjectId.isValid(id); // buscar o game
-
+  
   if (!isValid) {
     // testando o id
     res.status(400).send({ error: "Game não existe" });
     return;
   }
-
+  
+  const game = req.body; // esse vem do body requerimento
   if (
     !game ||
     !game.title ||
@@ -90,19 +91,18 @@ app.put("/games/:_id", async (req, res) => {
   ) {
     // teste game do body
     res.status(400).send({ error: "Game inválido" });
-
     return;
   }
 
-  await gameSchema.findByIdAndUpdate({ _id: id }, data, { new: true }); // update
+  await gameSchema.findByIdAndUpdate({ _id: id }, game); // update
   const gameUpdate = await gameSchema.findById(id);
-  res.send(gameUpdate);
+  res.send({gameUpdate});
 });
 
-app.delete("/games/:_id", async (req, res) => {
-  const { _id } = req.params;
+app.delete("/games/:id", async (req, res) => {
+  const id = req.params.id;
   // buscar o objeto id do banco e vendo se é válido com o da requisição
-  const isValid = await moongose.Types.ObjectId.isValid(_id);
+  const isValid = await moongose.Types.ObjectId.isValid(id);
 
   if (!isValid) {
     // testando o id
@@ -110,8 +110,8 @@ app.delete("/games/:_id", async (req, res) => {
     return;
   }
 
-  const game = await gameSchema.findByIdAndDelete({ _id });
-  res.send({game});
+  const idFilme = await gameSchema.findByIdAndDelete(id);
+  res.send({idFilme});
 });
 
 app.listen(port, () => {
