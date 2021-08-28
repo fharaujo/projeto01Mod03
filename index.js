@@ -1,11 +1,26 @@
 // Import modules
 const express = require("express");
 const gameSchema = require("./models/game");
-const moongose = require("mongoose");
+const mongoose = require("./database");
 
 const app = express();
 const port = 3000;
 app.use(express.json());
+
+// criando funções para mapeamento do código e boas práticas
+const isValidId = (id) => {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    res.status(422).send({ error: "Id inválido." });
+    return;
+  }
+};
+
+const gameExist = (game) => {
+  if (!game) {
+    res.status(404).send({ error: "Jogo não encontrado." });
+    return;
+  }
+};
 
 // GET "/" respondendo as boas vindas do projeto
 app.get("/", (req, res) => {
@@ -21,28 +36,12 @@ app.get("/games", async (req, res) => {
 });
 
 // GET "/games/:{ID}" respondendo status com jogo pelo ID
-app.get("/games/:_id", async (req, res) => {
-  const { _id } = req.params;
-  const game = await gameSchema.findById({ _id });
-  const isValid = await moongose.Types.ObjectId.isValid(_id); // buscar o id válido
-
-  if (!isValid) {
-    // testando o id
-    res.status(422).send({ error: "ID inválido." });
-    return;
-  }
-
-  if (
-    !game ||
-    !game.title ||
-    !game.imgURL ||
-    !game.genre ||
-    !game.console ||
-    !game.yearPublished
-  ) {
-    res.status(400).send({ mensage: "Game não existe." });
-    return;
-  }
+app.get("/games/:id", async (req, res) => {
+  const id = req.params.id;
+  const game = await gameSchema.findById(id);
+  // chamada das funções de mapeamento do código
+  isValidId(id);
+  gameExist(game);
 
   res.send({ game });
 });
@@ -71,16 +70,10 @@ app.post("/games", async (req, res) => {
 
 // PUT "/games" respondendo status com o jogo atualizado
 app.put("/games/:id", async (req, res) => {
-  const id = req.params.id; // esse é que vem do requerimento
-  const isValid = await moongose.Types.ObjectId.isValid(id); // buscar o game
+  const id = req.params.id; // recebendo ID da requisição
+  isValidId(id);
 
-  if (!isValid) {
-    // testando o id
-    res.status(400).send({ error: "Game não existe" });
-    return;
-  }
-
-  const game = req.body;
+  const game = req.body; // recebendo o game da requisição
   if (
     !game ||
     !game.title ||
@@ -100,27 +93,16 @@ app.put("/games/:id", async (req, res) => {
 });
 
 // DELETE "/games/:{ID}" respondendo status com o jogo deletado por ID
-
 app.delete("/games/:id", async (req, res) => {
   const id = req.params.id;
   // buscar o objeto id do banco e vendo se é válido com o da requisição
-  const isValid = await moongose.Types.ObjectId.isValid(id);
+  isValidId(id);
 
-  if (!isValid) {
-    // testando o id
-    res.status(400).send({ error: "ID inválido." });
-    return;
-  }
-
-  const filme = await gameSchema.findById(id);
-
-  if (!filme) {
-    res.status(400).send({ error: "Game não existe" });
-    return;
-  }
+  const game = await gameSchema.findById(id);
+  gameExist(game);
 
   await gameSchema.findByIdAndDelete(id);
-  res.send({ message: "Filme Excluido com sucesso." });
+  res.send({ message: "Game Excluido com sucesso." });
 });
 
 // "Escutando a porta do servidor e seu caminho"
