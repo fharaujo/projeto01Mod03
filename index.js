@@ -44,7 +44,7 @@ app.get("/games/:_id", async (req, res) => {
     return;
   }
 
-  res.send({game});
+  res.send({ game });
 });
 
 // POST "/games" respondendo status com todos jogo criado
@@ -66,20 +66,20 @@ app.post("/games", async (req, res) => {
 
   const newGame = await new gameSchema(game).save();
 
-  res.status(201).send({newGame});
+  res.status(201).send({ newGame });
 });
 
 // PUT "/games" respondendo status com o jogo atualizado
 app.put("/games/:id", async (req, res) => {
   const id = req.params.id; // esse é que vem do requerimento
   const isValid = await moongose.Types.ObjectId.isValid(id); // buscar o game
-  
+
   if (!isValid) {
     // testando o id
     res.status(400).send({ error: "Game não existe" });
     return;
   }
-  
+
   const game = req.body;
   if (
     !game ||
@@ -96,7 +96,7 @@ app.put("/games/:id", async (req, res) => {
 
   await gameSchema.findByIdAndUpdate({ _id: id }, game); // update
   const gameUpdate = await gameSchema.findById(id);
-  res.send({gameUpdate});
+  res.send({ gameUpdate });
 });
 
 // DELETE "/games/:{ID}" respondendo status com o jogo deletado por ID
@@ -113,9 +113,8 @@ app.delete("/games/:id", async (req, res) => {
   }
 
   const idFilme = await gameSchema.findByIdAndDelete(id);
-  res.send({idFilme});
+  res.send({ idFilme });
 });
-
 
 // "Escutando a porta do servidor e seu caminho"
 app.listen(port, () => {
