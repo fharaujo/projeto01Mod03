@@ -80,7 +80,7 @@ app.put("/games/:id", async (req, res) => {
     return;
   }
   
-  const game = req.body; // esse vem do body requerimento
+  const game = req.body;
   if (
     !game ||
     !game.title ||
@@ -99,6 +99,8 @@ app.put("/games/:id", async (req, res) => {
   res.send({gameUpdate});
 });
 
+// DELETE "/games/:{ID}" respondendo status com o jogo deletado por ID
+
 app.delete("/games/:id", async (req, res) => {
   const id = req.params.id;
   // buscar o objeto id do banco e vendo se é válido com o da requisição
@@ -114,6 +116,8 @@ app.delete("/games/:id", async (req, res) => {
   res.send({idFilme});
 });
 
+
+// "Escutando a porta do servidor e seu caminho"
 app.listen(port, () => {
   console.log(`Servidor rodando na porta em: http://localhost:${port}`);
 });
