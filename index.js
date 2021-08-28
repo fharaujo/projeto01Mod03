@@ -21,10 +21,10 @@ app.get("/games", async (req, res) => {
 });
 
 // GET "/games/:{ID}" respondendo status com jogo pelo ID
-app.get("/games/:_id", async (req, res) => {
-  const { _id } = req.params;
-  const game = await gameSchema.findById({ _id });
-  const isValid = await moongose.Types.ObjectId.isValid(_id); // buscar o id válido
+app.get("/games/:id", async (req, res) => {
+  const id = req.params;
+  const game = await gameSchema.findById(id);
+  const isValid = await moongose.Types.ObjectId.isValid(id); // buscar o id válido
 
   if (!isValid) {
     // testando o id
@@ -40,11 +40,11 @@ app.get("/games/:_id", async (req, res) => {
     !game.console ||
     !game.yearPublished
   ) {
-    res.status(400).send({ mensage: "Game não existe." });
+    res.status(400).send({ mensage: "Jogo não existe." });
     return;
   }
 
-  res.send({game});
+  res.send({ game });
 });
 
 // POST "/games" respondendo status com todos jogo criado
@@ -59,27 +59,32 @@ app.post("/games", async (req, res) => {
     !game.console ||
     !game.yearPublished
   ) {
-    res.status(400).send({ error: "Game inválido" });
+    res.status(400).send({ error: "Jogo inválido" });
 
     return;
   }
 
   const newGame = await new gameSchema(game).save();
 
-  res.status(201).send({newGame});
+  res.status(201).send({ newGame });
 });
 
 // PUT "/games" respondendo status com o jogo atualizado
 app.put("/games/:id", async (req, res) => {
   const id = req.params.id; // esse é que vem do requerimento
   const isValid = await moongose.Types.ObjectId.isValid(id); // buscar o game
-  
+
   if (!isValid) {
     // testando o id
-    res.status(400).send({ error: "Game não existe" });
+    res.status(400).send({ error: "Jogo não existe" });
     return;
   }
-  
+  const gameExist = await gameSchema.findById(id);
+  if (!gameExist) {
+    res.status(404).send({ error: "Jogo não encontrado." });
+    return;
+  }
+
   const game = req.body; // esse vem do body requerimento
   if (
     !game ||
@@ -90,13 +95,13 @@ app.put("/games/:id", async (req, res) => {
     !game.yearPublished
   ) {
     // teste game do body
-    res.status(400).send({ error: "Game inválido" });
+    res.status(400).send({ error: "Jogo inválido" });
     return;
   }
 
   await gameSchema.findByIdAndUpdate({ _id: id }, game); // update
   const gameUpdate = await gameSchema.findById(id);
-  res.send(gameUpdate);
+  res.send({gameUpdate});
 });
 
 app.delete("/games/:id", async (req, res) => {
@@ -106,12 +111,12 @@ app.delete("/games/:id", async (req, res) => {
 
   if (!isValid) {
     // testando o id
-    res.status(400).send({ error: "Game não existe" });
+    res.status(400).send({ error: "Jogo não existe" });
     return;
   }
 
   const game = await gameSchema.findByIdAndDelete(id);
-  res.send({game});
+  res.send({ game });
 });
 
 app.listen(port, () => {
