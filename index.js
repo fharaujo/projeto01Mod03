@@ -25,7 +25,7 @@ const gameExist = (game) => {
 // GET "/" respondendo as boas vindas do projeto
 app.get("/", (req, res) => {
   res.send(
-    "Hello, Project 01 CRUD API NodeJS - Blue Editech Course - Module 03"
+    {info: "Hello, Project 01 CRUD API NodeJS - Blue Editech Course - Module 03"}
   );
 });
 
