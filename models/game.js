@@ -27,3 +27,4 @@ gameSchema.set("versionKey", false); // tirando __v
 const Game = moongose.model("Game", gameSchema);
 
 module.exports = Game;
+

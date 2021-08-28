@@ -108,12 +108,19 @@ app.delete("/games/:id", async (req, res) => {
 
   if (!isValid) {
     // testando o id
+    res.status(400).send({ error: "ID inválido." });
+    return;
+  }
+
+  const filme = await gameSchema.findById(id);
+
+  if (!filme) {
     res.status(400).send({ error: "Game não existe" });
     return;
   }
 
-  const idFilme = await gameSchema.findByIdAndDelete(id);
-  res.send({ idFilme });
+  await gameSchema.findByIdAndDelete(id);
+  res.send({ message: "Filme Excluido com sucesso." });
 });
 
 // "Escutando a porta do servidor e seu caminho"
